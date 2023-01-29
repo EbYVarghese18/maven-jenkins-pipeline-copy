@@ -1,12 +1,26 @@
 pipeline {
     agent any
-
+    tools {
+        maven 'Maven'
+    }
     stages {
+        stage ('Initialize') {
+            steps {
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                '''
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Build'
-                mvn package
-                java -cp target/my-app-1.0-SNAPSHOT.jar com.mycompany.app.App
+                sh 'mvn -Dmaven.test.failure.ignore=true install'
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/**/reports.xml' 
+                }
             }
         }
         stage('Test') {
