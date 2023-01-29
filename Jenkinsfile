@@ -4,7 +4,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Hello World'
+                echo 'Build'
+                mvn package
+                java -cp target/my-app-1.0-SNAPSHOT.jar com.mycompany.app.App
             }
         }
         stage('Test') {
